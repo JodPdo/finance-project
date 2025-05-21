@@ -40,6 +40,7 @@ function Dashboard({ onLogout }) {
         setError(err.message);
       }
     };
+
     fetchTransactions();
   }, []);
 
@@ -57,6 +58,7 @@ function Dashboard({ onLogout }) {
         setError("❌ Summary error: " + err.message);
       }
     };
+
     fetchSummary();
   }, []);
 
@@ -74,6 +76,7 @@ function Dashboard({ onLogout }) {
         setError("❌ Category error: " + err.message);
       }
     };
+
     fetchCategories();
   }, []);
 
@@ -144,7 +147,9 @@ function Dashboard({ onLogout }) {
       const saved = await response.json();
 
       if (editTransactionId) {
-        setTransactions((prev) => prev.map((t) => (t.id === editTransactionId ? saved : t)));
+        setTransactions((prev) =>
+          prev.map((t) => (t.id === editTransactionId ? saved : t))
+        );
       } else {
         setTransactions((prev) => [saved, ...prev]);
       }
@@ -157,11 +162,11 @@ function Dashboard({ onLogout }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">📋 รายการธุรกรรม</h2>
+    <div className="max-w-3xl mx-auto p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-blue-700">💰 ระบบจัดการการเงิน</h2>
         <button
-          className="bg-red-500 text-white px-4 py-1 rounded"
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow"
           onClick={() => {
             localStorage.removeItem("token");
             onLogout();
@@ -171,19 +176,19 @@ function Dashboard({ onLogout }) {
         </button>
       </div>
 
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red-600 mb-4">{error}</p>}
 
       {summary && (
-        <div className="grid grid-cols-3 gap-4 text-center my-4 font-semibold">
-          <div className="bg-green-100 text-green-800 p-4 rounded-xl shadow">
+        <div className="grid grid-cols-3 gap-4 text-center my-6">
+          <div className="bg-green-100 text-green-800 p-4 rounded-xl shadow-md">
             <p>✅ รายรับ</p>
             <p className="text-xl font-bold">{summary.totalIncome ?? 0} บาท</p>
           </div>
-          <div className="bg-red-100 text-red-800 p-4 rounded-xl shadow">
+          <div className="bg-red-100 text-red-800 p-4 rounded-xl shadow-md">
             <p>❌ รายจ่าย</p>
             <p className="text-xl font-bold">{summary.totalExpense ?? 0} บาท</p>
           </div>
-          <div className="bg-yellow-100 text-yellow-800 p-4 rounded-xl shadow">
+          <div className="bg-yellow-100 text-yellow-800 p-4 rounded-xl shadow-md">
             <p>💰 คงเหลือ</p>
             <p className="text-xl font-bold">
               {(summary.totalIncome ?? 0) - (summary.totalExpense ?? 0)} บาท
@@ -192,7 +197,8 @@ function Dashboard({ onLogout }) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="bg-gray-100 p-4 rounded mb-6">
+      <form onSubmit={handleSubmit} className="bg-gray-50 p-6 rounded-xl shadow mb-6">
+        <h3 className="text-lg font-semibold mb-4">🧾 เพิ่ม / แก้ไข รายการ</h3>
         <div className="grid grid-cols-2 gap-4">
           <input type="number" placeholder="จำนวนเงิน" required className="p-2 rounded border"
             value={newTransaction.amount} onChange={(e) => setNewTransaction({ ...newTransaction, amount: e.target.value })} />
@@ -217,15 +223,15 @@ function Dashboard({ onLogout }) {
           </select>
         </div>
 
-        <div className="mt-4">
-          <button type="submit" className="bg-blue-600 text-white px-4 py-1 rounded">
+        <div className="mt-4 flex items-center gap-4">
+          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
             {editTransactionId ? "อัปเดตรายการ" : "เพิ่มรายการ"}
           </button>
 
           {editTransactionId && (
             <button
               type="button"
-              className="ml-4 text-gray-600 underline"
+              className="text-gray-600 hover:text-black underline"
               onClick={() => {
                 setEditTransactionId(null);
                 setNewTransaction({ amount: "", description: "", date: "", type: "income", categoryId: 1 });
@@ -237,23 +243,24 @@ function Dashboard({ onLogout }) {
         </div>
       </form>
 
-      <ul className="space-y-2">
+      <h3 className="text-xl font-semibold mb-4">📄 รายการธุรกรรม</h3>
+      <ul className="space-y-3">
         {transactions.map((t) => (
-          <li key={t.id} className="p-3 bg-white shadow rounded">
+          <li key={t.id} className="p-4 bg-white shadow rounded-xl">
             <div className="flex justify-between items-center">
               <div>
-                <p><strong>{t.description}</strong> - {t.amount} บาท</p>
-                <p className="text-sm text-gray-500">ประเภท: {t.type}</p>
+                <p className="font-semibold">{t.description} - {t.amount} บาท</p>
+                <p className="text-sm text-gray-500">ประเภท: {t.type} | วันที่: {t.date}</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <button
-                  className="text-blue-600 hover:underline"
+                  className="text-blue-600 hover:text-blue-800"
                   onClick={() => handleEdit(t)}
                 >
-                  🗒️ แก้ไข
+                  📝 แก้ไข
                 </button>
                 <button
-                  className="text-red-600 hover:underline"
+                  className="text-red-600 hover:text-red-800"
                   onClick={() => handleDelete(t.id)}
                 >
                   🗑️ ลบ
@@ -268,6 +275,7 @@ function Dashboard({ onLogout }) {
 }
 
 export default Dashboard;
+
 
 
 

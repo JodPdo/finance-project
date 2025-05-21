@@ -15,7 +15,10 @@ function App() {
             <Signup onSignup={(newToken) => setToken(newToken)} />
             <p className="text-sm mt-2">
               มีบัญชีแล้ว?{" "}
-              <button className="text-blue-600" onClick={() => setShowSignup(false)}>
+              <button
+                className="text-blue-600"
+                onClick={() => setShowSignup(false)}
+              >
                 กลับไป Login
               </button>
             </p>
@@ -25,7 +28,10 @@ function App() {
             <Login onLogin={(newToken) => setToken(newToken)} />
             <p className="text-sm mt-2">
               ยังไม่มีบัญชี?{" "}
-              <button className="text-green-600" onClick={() => setShowSignup(true)}>
+              <button
+                className="text-green-600"
+                onClick={() => setShowSignup(true)}
+              >
                 สมัครสมาชิก
               </button>
             </p>
@@ -35,10 +41,12 @@ function App() {
     );
   }
 
-  return <Dashboard />;
+  // ✅ ส่ง onLogout ไปให้ Dashboard
+  return <Dashboard onLogout={() => setToken(null)} />;
 }
 
 export default App;
+
 
 
 
