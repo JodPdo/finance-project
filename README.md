@@ -29,6 +29,7 @@ A full-stack web application to help users manage their personal income and expe
 ./mvnw spring-boot:run
 
 ### Frontend Setup
-cd frontend
+'''bash
+cd finance-frontend
 npm install
 npm run dev
